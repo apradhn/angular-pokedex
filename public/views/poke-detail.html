@@ -1,0 +1,16 @@
+<h2>{{ name }}</h2>
+<img ng-src="{{ sprite_url }}">
+<div>
+    <em>{{ species }}</em>
+</div>
+<p>
+    {{ description}}
+</p>
+<h3>Types</h3>
+<div ng-repeat="type in types">
+    {{ type.name }}
+</div>
+<h3>Abilities</h3>
+<div ng-repeat="ability in abilities">
+    {{ ability.name }}
+</div>

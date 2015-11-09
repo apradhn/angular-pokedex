@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  div(ng-controller="PokedexCtrl")
+    div.search
+        form
+            label(for='query') Search Pokédex
+            input(id='query', type='text', name='query' ng-model='query' ng-change="search(query)")
+            input(type='submit', ng-click='search(query)' value='Search')
+    div.random
+        form
+            input(type='submit', ng-click='random()', value='Random')
+    div.results.flex-container(ng-show="results")
+
+        div.flex-item(ng-repeat="pokemon in results")
+            h2 {{ pokemon.name }}
+            img(ng-src="{{ pokemon.sprite_url }}")
+            div
+                em {{ pokemon.species }}
+            h3 Description
+            p {{ pokemon.description }}
+            h3 Types
+            div(ng-repeat="type in pokemon.types") {{ type.name }}
+
+    div.error(ng-show="errorMsg")
+        {{ errorMsg }}
