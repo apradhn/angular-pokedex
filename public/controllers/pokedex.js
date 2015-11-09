@@ -7,59 +7,53 @@ pokedex.controller('PokedexCtrl', function($scope, $http, $q) {
                 var re = new RegExp(query);
                 return name.toLowerCase().match(re);
             });
-            fetchMany(matches);
-        }
+            var count = matches.length > 5 ? 5 : matches.length
+            for (var i = 0; i < count; i++) {
+                var name = matches[i].toLowerCase();
+                var pokePromise = fetchPokemon(name);
+                pokePromise.then(function(pokemon) {
+                    $scope.results.push(pokemon);
+                })
+            };
 
-        // fetch(query.toLowerCase());       
+        }
     }
 
     $scope.random = function() {
-        fetch(id);
-    }
-
-    function fetchMany(list) {
-        $scope.results = []
-        for (var i = 0; i < list.length; i++) {
-            var name = list[i].toLowerCase();
-            var pokemon = {}
-            $http.get('http://pokeapi.co/api/v1/pokemon/' + name, {cache: true})
-                .success(function(response) {
-                    var spritePromise = fetchSprite(response.sprites[0].resource_uri);
-                    spritePromise.then(function(sprite_url) {
-                        response.sprite_url = sprite_url;
-                    });
-                    var descriptionPromise = fetchDescription(response.descriptions[0].resource_uri);
-                    descriptionPromise.then(function(description) {
-                        response.description = description;
-                    })
-                    $scope.results.push(response);
-                });
+        $scope.results = [];
+        var count = 5;
+        var id;
+        for (var i = 0; i < count; i++) {
+            id = Math.floor(Math.random() * (718 - 1) + 1);
+            var pokePromise = fetchPokemon(id);
+            pokePromise.then(function(pokemon) {
+                $scope.results.push(pokemon);
+            });
         };
     }
 
-    function fetchById(id) {
+    function fetchPokemon(id) {
+        var pokemon = $q.defer();
         $http.get('http://pokeapi.co/api/v1/pokemon/' + id, {cache: true})
             .success(function(response) {
-                $scope.name = response.name;
-                $scope.species = response.species;
-                $scope.abilities = response.abilities;
-                $scope.defense = response.defense;
-                $scope.attack = response.attack;
-                $scope.spAtk = response.sp_atk;
-                $scope.spDef = response.sp_def;
-                $scope.speed = response.speed;
-                $scope.hp = response.hp;
-                $scope.types = response.types;
-                fetchDescription(response.descriptions[0].resource_uri);
-                fetchSprite(response.sprites[0].resource_uri);
+                var spritePromise = fetchSprite(response.sprites[0].resource_uri);
+                spritePromise.then(function(sprite_url) {
+                    response.sprite_url = sprite_url;
+                });
+                var descriptionPromise = fetchDescription(response.descriptions[0].resource_uri);
+                descriptionPromise.then(function(description) {
+                    response.description = description;
+                });
+                pokemon.resolve(response);
             });
+        return pokemon.promise;
     }
 
     function fetchDescription(resource_uri) {
         var description = $q.defer();
         $http.get('http://pokeapi.co/' + resource_uri, {cache: true})
             .success(function(response) {
-                 description.resolve(response.description);
+                description.resolve(response.description);
             });
         return description.promise
     }

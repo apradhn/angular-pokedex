@@ -12,7 +12,7 @@ block content
     div.random
         form
             input(type='submit', ng-click='random()', value='Random')
-    div.results.flex-container(ng-show="results")
+    div.results.flex-container
 
         div.flex-item(ng-repeat="pokemon in results")
             h2 {{ pokemon.name }}
