@@ -13,6 +13,12 @@ a {
 }
 
 .flex-item {
-    padding: 5px;
-    width: 200px;
+    padding: 10px;
+    width: 300px;
 }
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+}
+

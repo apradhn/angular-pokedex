@@ -16,13 +16,32 @@ block content
 
         div.flex-item(ng-repeat="pokemon in results")
             h2 {{ pokemon.name }}
-            img(ng-src="{{ pokemon.sprite_url }}")
-            div
-                em {{ pokemon.species }}
-            h3 Description
-            p {{ pokemon.description }}
-            h3 Types
-            div(ng-repeat="type in pokemon.types") {{ type.name }}
+            img(ng-src="{{ pokemon.sprite_url }}" height="150")
+            div.info-container
+                div.info-flex
+                    em {{ pokemon.species }}
+                div.info-flex
+                    h3 Description
+                    div {{ pokemon.description }}
+                div.info-flex
+                    h3 Types
+                    span(ng-repeat="type in pokemon.types") {{ type.name }}{{$last ? '' : ', '}}
+                div.info-flex
+                    table 
+                        tr
+                            th Attack
+                            th Defense
+                            th Sp. Atk
+                            th Sp. Def
+                            th Speed
+                            th HP
+                        tr 
+                            td {{ pokemon.attack }}
+                            td {{ pokemon.defense }}
+                            td {{ pokemon.sp_atk }}
+                            td {{ pokemon.sp_def }}
+                            td {{ pokemon.speed }}
+                            td {{ pokemon.hp }}                      
 
     div.error(ng-show="errorMsg")
         {{ errorMsg }}
